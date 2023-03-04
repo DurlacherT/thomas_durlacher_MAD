@@ -22,12 +22,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.calculateButton.setOnClickListener{ checkGuess(myRandomValues) }
     }
- //test
 
-    private fun checkGuess(myRandomValues: List<out Int>): Pair<Int, Int>  {
+    private fun checkGuess(myRandomValues: List<out Int>)  {
 
-        var input = binding.costOfService.text.toList()
-        var  myGuess = input.map { it.digitToInt() }
+        val input = binding.costOfService.text.toList()
+        val myGuess = input.map { it.digitToInt() }
+        if (myGuess.size != 4) {
+            return
+        }
 
         var n = 0
         var m = 0
@@ -53,11 +55,8 @@ class MainActivity : AppCompatActivity() {
             moveTaskToBack(true);
             exitProcess(-1)
         }
-
-    return Pair(n, m)
+    return
     }
-
-
 }
 
 
