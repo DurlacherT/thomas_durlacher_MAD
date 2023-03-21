@@ -13,7 +13,7 @@ import com.example.movieapp.ui.Screen
 fun MyNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
-        composable(Screen.MainScreen.route) { HomeScreen(navController = navController) }
+        composable(Screen.MainScreen.route) { HomeScreen() }
         composable(
             route = Screen.DetailScreen.route + "/{name}",
             arguments =
@@ -32,5 +32,5 @@ fun MyNavigation() {
 
 @Composable
 fun DetailScreen(name: String?, navController: NavHostController) {
-    MessageList(navController)
+    MessageList()
 }
