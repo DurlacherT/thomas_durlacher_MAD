@@ -5,32 +5,33 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.movieapp.HomeScreen
-import com.example.movieapp.MessageList
 import com.example.movieapp.ui.Screen
+import com.example.movieapp.ui.screens.DetailScreen
+import com.example.movieapp.ui.screens.FavoriteScreen
+import com.example.movieapp.ui.screens.HomeScreen
 
 @Composable
-fun MyNavigation() {
+fun Navigation(){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
-        composable(Screen.MainScreen.route) { HomeScreen() }
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable(route = "home") {
+            HomeScreen(navController)
+        }
+        composable(route = "favorites") {
+            FavoriteScreen(navController)
+        }
+
         composable(
-            route = Screen.DetailScreen.route + "/{name}",
-            arguments =
-            listOf(
-                navArgument("name") {
-                    type = NavType.StringType
-                    defaultValue = "Thomas"
-                    nullable = true
-                }
-            )
-        ) { entry ->
-            DetailScreen(name = entry.arguments?.getString("name"), navController)
+            route = "detail/{movieId}",
+            arguments = listOf(navArgument("movieId"){
+                type = NavType.StringType
+            })
+
+        ) {backStackEntry ->
+            DetailScreen(navController, movieId = backStackEntry.arguments?.getString("movieId"))
         }
     }
 }
 
-@Composable
-fun DetailScreen(name: String?, navController: NavHostController) {
-    MessageList()
-}
+

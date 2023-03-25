@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.screens
 
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -18,8 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,32 +33,20 @@ import com.example.movieapp.SharedTopAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
-
 @Composable
-fun HomeScreen(navController: NavController) {
-    // A surface container using the 'background' color from the theme
+fun DetailScreen(navController: NavController, movieId: String?) {
+val movie= getMoviebyId(getMovies(), movieId)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
-        Column {
-
-            MessageList(navController)
-        }
+        MessageListDetail( navController, movie)
     }
-}
-
-
-
-
-@Composable
-fun Favorites(){
-    Text("Favorites")
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieRow(movie: Movie, navController: NavController) {
+fun MovieRowDetail(movie: Movie, navController: NavController) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(targetValue = if (expandedState) 180f else 0f)
 
@@ -134,10 +125,7 @@ fun MovieRow(movie: Movie, navController: NavController) {
                 }
             }
             if (expandedState) {
-                val temp = movie.id
-                LaunchedEffect(Unit) {
-                navController.navigate("detail/$temp")}
-/*
+
                 Text(
                     text = "Director: " + movie.director,
                     fontSize = MaterialTheme.typography.subtitle1.fontSize,
@@ -174,34 +162,74 @@ fun MovieRow(movie: Movie, navController: NavController) {
                     fontSize = MaterialTheme.typography.subtitle1.fontSize,
                     fontWeight = FontWeight.Normal,
                     maxLines = 5
-                )*/
+                )
             }
         }
     }
 }
 
 @Composable
-fun MessageList(navController: NavController) {
+fun MessageListDetail(navController: NavController, movie: Movie) {
+
     val bodyContent = remember { mutableStateOf("Select menu to change content") }
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
-                 SharedTopAppBar(navController = navController )
+            SharedTopAppBar(movie, navController)
         },
-        floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "fab icon")
-            }
-        },
-        drawerContent = { Text(text = "Drawer Menu 1") },
+
+
         content = { padding ->
-            print(getMovies())
-            LazyColumn {
-                (Modifier.padding(padding))
-                items(getMovies()) { message -> MovieRow(message, navController) }
+            DetailMovieImages(movie, navController, padding)
             }
-        }
+
+
     )
+}
+
+@Composable
+fun DetailMovieImages(movie: Movie, navController: NavController, paddingValues: PaddingValues) {
+Column() {
+    MovieRowDetail(movie, navController)
+    LazyColumn {
+        (Modifier.padding(paddingValues))
+        items(getMovies()) { message -> MovieImages(message) }
+    }
+}
+}
+
+@Composable
+fun MovieImages(movie: Movie){
+    Card {
+        Box(
+            modifier = Modifier
+                .height(150.dp)
+                .fillMaxWidth(),
+        ) {
+        val painter =
+            rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current)
+                    .data(data = movie.images[0])
+                    .apply(block = fun ImageRequest.Builder.() {})
+                    .build(),
+                contentScale = ContentScale.FillWidth
+            )
+        val painterState = painter.state
+        Image(
+            painter = painter,
+            contentDescription = "Movie Poster",
+            contentScale = ContentScale.FillWidth
+        )    }}
+}
+
+fun getMoviebyId(movie: List<Movie>, movieId: String?): Movie {
+    for (i in movie.indices) {
+        println("------------------------")
+        println(movie[i].id)
+        println(movieId.toString())
+
+        if(movie[i].id==movieId) {
+            return movie[i]}
+    }
+    return movie[0]
 }
