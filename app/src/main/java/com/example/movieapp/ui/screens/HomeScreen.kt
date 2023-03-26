@@ -26,7 +26,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.movieapp.SharedTopAppBar
+import com.example.movieapp.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
@@ -187,7 +187,7 @@ fun MessageList(navController: NavController) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-                 SharedTopAppBar(navController = navController )
+                 SimpleAppBar(navController = navController )
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {

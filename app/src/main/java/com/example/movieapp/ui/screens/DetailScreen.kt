@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.movieapp.SharedTopAppBar
+import com.example.movieapp.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
@@ -175,7 +175,7 @@ fun MessageListDetail(navController: NavController, movie: Movie) {
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     Scaffold(
         topBar = {
-            SharedTopAppBar(movie, navController)
+            SimpleAppBar(movie, navController)
         },
 
 

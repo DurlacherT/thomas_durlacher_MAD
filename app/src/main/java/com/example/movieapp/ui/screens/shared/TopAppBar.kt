@@ -15,10 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieapp.models.Movie
 import com.example.movieapp.ui.screens.Favorites
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun SharedTopAppBar(movie: Movie? =  null, navController: NavController){
+fun SimpleAppBar(movie: Movie? =  null, navController: NavController){
     val bodyContent = remember { mutableStateOf("Select menu to change content") }
     val currentRoute = navController.currentBackStackEntry?.destination?.route
 

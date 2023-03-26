@@ -1,37 +1,30 @@
 import androidx.compose.runtime.*
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.movieapp.ui.Screen
 import com.example.movieapp.ui.screens.DetailScreen
 import com.example.movieapp.ui.screens.FavoriteScreen
 import com.example.movieapp.ui.screens.HomeScreen
 
+sealed class Screens(val route: String) {
+    object Home : Screens("home")
+    object Favorites : Screens("favorites")
+    object Details : Screens("detail/{movieId}")
+}
+
 @Composable
-fun Navigation(){
+fun Navigation() {
     val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = "home") {
-        composable(route = "home") {
-            HomeScreen(navController)
-        }
-        composable(route = "favorites") {
-            FavoriteScreen(navController)
-        }
-
+    NavHost(navController = navController, startDestination = Screens.Home.route) {
+        composable(route = Screens.Home.route) { HomeScreen(navController) }
+        composable(route = Screens.Favorites.route) { FavoriteScreen(navController) }
         composable(
-            route = "detail/{movieId}",
-            arguments = listOf(navArgument("movieId"){
-                type = NavType.StringType
-            })
-
-        ) {backStackEntry ->
+            route = Screens.Details.route,
+            arguments = listOf(navArgument("movieId") { type = NavType.StringType })
+        ) { backStackEntry ->
             DetailScreen(navController, movieId = backStackEntry.arguments?.getString("movieId"))
         }
     }
 }
-
-
