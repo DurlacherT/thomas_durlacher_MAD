@@ -5,28 +5,37 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.movieapp.ui.screens.shared.SimpleAppBar
 import com.example.movieapp.models.Movie
@@ -47,7 +56,8 @@ fun MovieRowDetail(movie: Movie) {
     val rotationState by animateFloatAsState(targetValue = if (expandedState) 180f else 0f)
     Card(
         modifier =
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .animateContentSize(
                 animationSpec = tween(delayMillis = 300, easing = LinearOutSlowInEasing)
             )
@@ -58,7 +68,9 @@ fun MovieRowDetail(movie: Movie) {
     ) {
         Column {
             Box(
-                modifier = Modifier.height(150.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth(),
             ) {
                 val painter =
                     rememberAsyncImagePainter(
@@ -74,7 +86,9 @@ fun MovieRowDetail(movie: Movie) {
                     contentScale = ContentScale.FillWidth
                 )
                 Box(
-                    modifier = Modifier.fillMaxSize().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Icon(
@@ -88,7 +102,9 @@ fun MovieRowDetail(movie: Movie) {
                 }
             }
             Row(
-                modifier = Modifier.fillMaxWidth().padding(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -98,7 +114,9 @@ fun MovieRowDetail(movie: Movie) {
                     style = MaterialTheme.typography.h6
                 )
                 IconButton(
-                    modifier = Modifier.alpha(ContentAlpha.medium).rotate(rotationState),
+                    modifier = Modifier
+                        .alpha(ContentAlpha.medium)
+                        .rotate(rotationState),
                     onClick = { expandedState = !expandedState }
                 ) {
                     Icon(
@@ -153,6 +171,7 @@ fun MovieRowDetail(movie: Movie) {
 
 @Composable
 fun MessageListDetail(navController: NavController, movie: Movie) {
+
     Scaffold(
         topBar = { SimpleAppBar(movie, navController) },
         content = { padding -> DetailMovieImages(movie, padding) }
@@ -161,35 +180,37 @@ fun MessageListDetail(navController: NavController, movie: Movie) {
 
 @Composable
 fun DetailMovieImages(movie: Movie, paddingValues: PaddingValues) {
+    val list = Array(10) {
+        "Item ${it + 1}"
+    }
+    val configuration = LocalConfiguration.current
+
+    val screenWidth = configuration.screenWidthDp.dp
+
     Column {
         MovieRowDetail(movie)
-        LazyColumn {
-            (Modifier.padding(paddingValues))
-            items(getMovies()) { message -> MovieImages(message) }
+        Text(text = "Movie Images",
+            textAlign = TextAlign.Center,
+            style = typography.h5,)
+        LazyRow(
+            modifier = Modifier
+        ) {
+            items(movie.images) { imageUrl ->
+                Image(
+                    painter = rememberAsyncImagePainter(imageUrl),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(420.dp)
+                        .height(420.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(8.dp)
+                )
+            }
         }
     }
 }
 
-@Composable
-fun MovieImages(movie: Movie) {
-    Card {
-        Box(
-            modifier = Modifier.height(150.dp).fillMaxWidth(),
-        ) {
-            val painter =
-                rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current).data(data = movie.images[0]).build(),
-                    contentScale = ContentScale.FillWidth
-                )
-            painter.state
-            Image(
-                painter = painter,
-                contentDescription = "Movie Poster",
-                contentScale = ContentScale.FillWidth
-            )
-        }
-    }
-}
+
 
 fun getMovieId(movie: List<Movie>, movieId: String?): Movie {
     for (i in movie.indices) {
