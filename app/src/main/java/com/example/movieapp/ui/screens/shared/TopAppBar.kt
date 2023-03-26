@@ -1,5 +1,4 @@
-package com.example.movieapp
-
+package com.example.movieapp.ui.screens.shared
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -17,50 +16,43 @@ import com.example.movieapp.models.Movie
 import com.example.movieapp.ui.screens.Favorites
 
 @Composable
-fun SimpleAppBar(movie: Movie? =  null, navController: NavController){
+fun SimpleAppBar(movie: Movie? = null, navController: NavController) {
     val bodyContent = remember { mutableStateOf("Select menu to change content") }
     val currentRoute = navController.currentBackStackEntry?.destination?.route
-
     TopAppBar(
         title = {
-                if (movie != null) {
-                    Text(text = movie.title)
-                }
-                if (currentRoute == "home") {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            if (movie != null) {
+                Text(text = movie.title)
+            }
+            if (currentRoute == "home") {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(text = "Movies")
                     TopAppBarDropdownMenu(bodyContent, navController)
-
                 }
-
             }
-
         },
         modifier = Modifier.fillMaxWidth(),
-        navigationIcon = if (navController.previousBackStackEntry != null) {
+        navigationIcon =
+        if (navController.previousBackStackEntry != null) {
             {
                 Row() {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
-
                 }
-
             }
         } else {
             null
         }
-
     )
 }
 
 @Composable
 fun TopAppBarDropdownMenu(bodyContent: MutableState<String>, navController: NavController) {
     val expanded = remember { mutableStateOf(false) }
-
     Box(Modifier.wrapContentSize(Alignment.TopEnd)) {
         IconButton(
             onClick = {
@@ -71,7 +63,6 @@ fun TopAppBarDropdownMenu(bodyContent: MutableState<String>, navController: NavC
             Icon(Icons.Filled.MoreVert, contentDescription = "More Menu")
         }
     }
-
     DropdownMenu(
         expanded = expanded.value,
         onDismissRequest = { expanded.value = false },
@@ -82,12 +73,7 @@ fun TopAppBarDropdownMenu(bodyContent: MutableState<String>, navController: NavC
                 bodyContent.value = "First Item Selected"
             }
         ) {
-            IconButton(
-                onClick = {
-                    navController.navigate("favorites")},
-
-                content = { Favorites() }
-            )
+            IconButton(onClick = { navController.navigate("favorites") }, content = { Favorites() })
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.movieapp.ui.screens
 
-
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -29,31 +28,26 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.movieapp.SimpleAppBar
+import com.example.movieapp.ui.screens.shared.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
 @Composable
 fun DetailScreen(navController: NavController, movieId: String?) {
-val movie= getMoviebyId(getMovies(), movieId)
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        MessageListDetail( navController, movie)
+    val movie = getMovieId(getMovies(), movieId)
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+        MessageListDetail(navController, movie)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieRowDetail(movie: Movie, navController: NavController) {
+fun MovieRowDetail(movie: Movie) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(targetValue = if (expandedState) 180f else 0f)
-
     Card(
         modifier =
-        Modifier
-            .fillMaxWidth()
+        Modifier.fillMaxWidth()
             .animateContentSize(
                 animationSpec = tween(delayMillis = 300, easing = LinearOutSlowInEasing)
             )
@@ -64,15 +58,12 @@ fun MovieRowDetail(movie: Movie, navController: NavController) {
     ) {
         Column {
             Box(
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.height(150.dp).fillMaxWidth(),
             ) {
                 val painter =
                     rememberAsyncImagePainter(
                         ImageRequest.Builder(LocalContext.current)
                             .data(data = movie.images[0])
-                            .apply(block = fun ImageRequest.Builder.() {})
                             .build(),
                         contentScale = ContentScale.FillWidth
                     )
@@ -82,11 +73,8 @@ fun MovieRowDetail(movie: Movie, navController: NavController) {
                     contentDescription = "Movie Poster",
                     contentScale = ContentScale.FillWidth
                 )
-
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
+                    modifier = Modifier.fillMaxSize().padding(10.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Icon(
@@ -99,11 +87,8 @@ fun MovieRowDetail(movie: Movie, navController: NavController) {
                     CircularProgressIndicator()
                 }
             }
-
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
+                modifier = Modifier.fillMaxWidth().padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -113,9 +98,7 @@ fun MovieRowDetail(movie: Movie, navController: NavController) {
                     style = MaterialTheme.typography.h6
                 )
                 IconButton(
-                    modifier = Modifier
-                        .alpha(ContentAlpha.medium)
-                        .rotate(rotationState),
+                    modifier = Modifier.alpha(ContentAlpha.medium).rotate(rotationState),
                     onClick = { expandedState = !expandedState }
                 ) {
                     Icon(
@@ -170,66 +153,49 @@ fun MovieRowDetail(movie: Movie, navController: NavController) {
 
 @Composable
 fun MessageListDetail(navController: NavController, movie: Movie) {
-
-    val bodyContent = remember { mutableStateOf("Select menu to change content") }
-    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     Scaffold(
-        topBar = {
-            SimpleAppBar(movie, navController)
-        },
-
-
-        content = { padding ->
-            DetailMovieImages(movie, navController, padding)
-            }
-
-
+        topBar = { SimpleAppBar(movie, navController) },
+        content = { padding -> DetailMovieImages(movie, padding) }
     )
 }
 
 @Composable
-fun DetailMovieImages(movie: Movie, navController: NavController, paddingValues: PaddingValues) {
-Column() {
-    MovieRowDetail(movie, navController)
-    LazyColumn {
-        (Modifier.padding(paddingValues))
-        items(getMovies()) { message -> MovieImages(message) }
+fun DetailMovieImages(movie: Movie, paddingValues: PaddingValues) {
+    Column {
+        MovieRowDetail(movie)
+        LazyColumn {
+            (Modifier.padding(paddingValues))
+            items(getMovies()) { message -> MovieImages(message) }
+        }
     }
-}
 }
 
 @Composable
-fun MovieImages(movie: Movie){
+fun MovieImages(movie: Movie) {
     Card {
         Box(
-            modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.height(150.dp).fillMaxWidth(),
         ) {
-        val painter =
-            rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .data(data = movie.images[0])
-                    .apply(block = fun ImageRequest.Builder.() {})
-                    .build(),
+            val painter =
+                rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = movie.images[0]).build(),
+                    contentScale = ContentScale.FillWidth
+                )
+            painter.state
+            Image(
+                painter = painter,
+                contentDescription = "Movie Poster",
                 contentScale = ContentScale.FillWidth
             )
-        val painterState = painter.state
-        Image(
-            painter = painter,
-            contentDescription = "Movie Poster",
-            contentScale = ContentScale.FillWidth
-        )    }}
+        }
+    }
 }
 
-fun getMoviebyId(movie: List<Movie>, movieId: String?): Movie {
+fun getMovieId(movie: List<Movie>, movieId: String?): Movie {
     for (i in movie.indices) {
-        println("------------------------")
-        println(movie[i].id)
-        println(movieId.toString())
-
-        if(movie[i].id==movieId) {
-            return movie[i]}
+        if (movie[i].id == movieId) {
+            return movie[i]
+        }
     }
     return movie[0]
 }

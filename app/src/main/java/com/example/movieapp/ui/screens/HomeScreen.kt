@@ -26,30 +26,19 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.movieapp.SimpleAppBar
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
-
+import com.example.movieapp.ui.screens.shared.SimpleAppBar
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    // A surface container using the 'background' color from the theme
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        Column {
-
-            MessageList(navController)
-        }
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+        Column { MessageList(navController) }
     }
 }
 
-
-
-
 @Composable
-fun Favorites(){
+fun Favorites() {
     Text("Favorites")
 }
 
@@ -58,11 +47,9 @@ fun Favorites(){
 fun MovieRow(movie: Movie, navController: NavController) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(targetValue = if (expandedState) 180f else 0f)
-
     Card(
         modifier =
-        Modifier
-            .fillMaxWidth()
+        Modifier.fillMaxWidth()
             .animateContentSize(
                 animationSpec = tween(delayMillis = 300, easing = LinearOutSlowInEasing)
             )
@@ -73,15 +60,12 @@ fun MovieRow(movie: Movie, navController: NavController) {
     ) {
         Column {
             Box(
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.height(150.dp).fillMaxWidth(),
             ) {
                 val painter =
                     rememberAsyncImagePainter(
                         ImageRequest.Builder(LocalContext.current)
                             .data(data = movie.images[0])
-                            .apply(block = fun ImageRequest.Builder.() {})
                             .build(),
                         contentScale = ContentScale.FillWidth
                     )
@@ -93,9 +77,7 @@ fun MovieRow(movie: Movie, navController: NavController) {
                 )
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
+                    modifier = Modifier.fillMaxSize().padding(10.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Icon(
@@ -108,11 +90,8 @@ fun MovieRow(movie: Movie, navController: NavController) {
                     CircularProgressIndicator()
                 }
             }
-
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
+                modifier = Modifier.fillMaxWidth().padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -122,9 +101,7 @@ fun MovieRow(movie: Movie, navController: NavController) {
                     style = MaterialTheme.typography.h6
                 )
                 IconButton(
-                    modifier = Modifier
-                        .alpha(ContentAlpha.medium)
-                        .rotate(rotationState),
+                    modifier = Modifier.alpha(ContentAlpha.medium).rotate(rotationState),
                     onClick = { expandedState = !expandedState }
                 ) {
                     Icon(
@@ -135,46 +112,7 @@ fun MovieRow(movie: Movie, navController: NavController) {
             }
             if (expandedState) {
                 val temp = movie.id
-                LaunchedEffect(Unit) {
-                navController.navigate("detail/$temp")}
-/*
-                Text(
-                    text = "Director: " + movie.director,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 5
-                )
-                Text(
-                    text = "Released: " + movie.year,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 5
-                )
-                Text(
-                    text = "Genre: " + movie.genre,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 5
-                )
-                Text(
-                    text = "Actors: " + movie.actors,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 5
-                )
-                Text(
-                    text = "Rating: " + movie.rating,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 5
-                )
-                Divider(color = Color.Black, thickness = 1.dp)
-                Text(
-                    text = "Plot: " + movie.plot,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 5
-                )*/
+                LaunchedEffect(Unit) { navController.navigate("detail/$temp") }
             }
         }
     }
@@ -182,13 +120,10 @@ fun MovieRow(movie: Movie, navController: NavController) {
 
 @Composable
 fun MessageList(navController: NavController) {
-    val bodyContent = remember { mutableStateOf("Select menu to change content") }
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = {
-                 SimpleAppBar(navController = navController )
-        },
+        topBar = { SimpleAppBar(navController = navController) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(onClick = {}) {

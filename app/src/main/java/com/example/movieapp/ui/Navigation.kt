@@ -1,3 +1,5 @@
+package com.example.movieapp.ui
+
 import androidx.compose.runtime.*
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
