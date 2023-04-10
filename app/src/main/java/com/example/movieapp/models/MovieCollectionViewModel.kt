@@ -46,19 +46,19 @@ class MovieCollectionViewModel : ViewModel() {
     var regUser: RegisterUser = RegisterUser()
 
     var id: MutableState<String> = mutableStateOf(regUser.id)
-    var isidValid: MutableState<Boolean> = mutableStateOf(false)
+    var isidValid: MutableState<Boolean> = mutableStateOf(true)
     var userIdErrMsg: MutableState<String> = mutableStateOf("")
 
     var title: MutableState<String> = mutableStateOf(regUser.title)
-    var istitleValid: MutableState<Boolean> = mutableStateOf(false)
+    var istitleValid: MutableState<Boolean> = mutableStateOf(true)
     var titleErrMsg: MutableState<String> = mutableStateOf("")
 
     var year: MutableState<String> = mutableStateOf(regUser.year)
-    var isyearValid: MutableState<Boolean> = mutableStateOf(false)
+    var isyearValid: MutableState<Boolean> = mutableStateOf(true)
     var yearErrMsg: MutableState<String> = mutableStateOf("")
 
     // var genreItems: MutableState<List<ListItemSelectable>> = mutableStateOf(regUser.genreItems)
-    var isgenreItemsValid: MutableState<Boolean> = mutableStateOf(false)
+    var isgenreItemsValid: MutableState<Boolean> = mutableStateOf(true)
     var genreItemsErrMsg: MutableState<String> = mutableStateOf("")
 
     val genres = Genre.values().toList()
@@ -69,19 +69,19 @@ class MovieCollectionViewModel : ViewModel() {
         )
 
     var director: MutableState<String> = mutableStateOf(regUser.director)
-    var isdirectorValid: MutableState<Boolean> = mutableStateOf(false)
+    var isdirectorValid: MutableState<Boolean> = mutableStateOf(true)
     var directorErrMsg: MutableState<String> = mutableStateOf("")
 
     var actors: MutableState<String> = mutableStateOf(regUser.actors)
-    var isactorValid: MutableState<Boolean> = mutableStateOf(false)
+    var isactorValid: MutableState<Boolean> = mutableStateOf(true)
     var actorErrMsg: MutableState<String> = mutableStateOf("")
 
     var plot: MutableState<String> = mutableStateOf(regUser.plot)
-    var isplotValid: MutableState<Boolean> = mutableStateOf(false)
+    var isplotValid: MutableState<Boolean> = mutableStateOf(true)
     var plotErrMsg: MutableState<String> = mutableStateOf("")
 
     var rating: MutableState<Float> = mutableStateOf(regUser.rating)
-    var isratingValid: MutableState<Boolean> = mutableStateOf(false)
+    var isratingValid: MutableState<Boolean> = mutableStateOf(true)
     var ratingErrMsg: MutableState<String> = mutableStateOf("")
 
     var isEnabledRegisterButton: MutableState<Boolean> = mutableStateOf(false)
