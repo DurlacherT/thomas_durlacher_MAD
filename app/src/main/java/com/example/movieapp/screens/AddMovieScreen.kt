@@ -49,19 +49,6 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
 
             var year by remember { mutableStateOf("") }
 
-            /* val genres = Genre.values().toList()
-
-            var genreItems by remember {
-                mutableStateOf(
-                    genres.map { genre ->
-                        ListItemSelectable(
-                            title = genre.toString(),
-                            isSelected = false
-                        )
-                    }
-                )
-            }*/
-
             var director by remember { mutableStateOf("") }
 
             var actors by remember { mutableStateOf("") }
