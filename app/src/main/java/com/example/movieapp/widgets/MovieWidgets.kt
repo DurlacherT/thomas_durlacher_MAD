@@ -40,11 +40,13 @@ import com.example.movieapp.ui.theme.Shapes
 fun MovieRow(
     movie: Movie = getMovies()[0],
     modifier: Modifier = Modifier,
-    viewModel: MovieCollectionViewModel,
+    toggleFavoriteMovie: (movie: Movie) -> Unit = {},
     onItemClick: (String) -> Unit = {}
 ) {
     Card(modifier = modifier
         .clickable {
+            toggleFavoriteMovie(movie)
+println("test")
             onItemClick(movie.id)
         }
         .fillMaxWidth()
@@ -59,7 +61,7 @@ fun MovieRow(
                 contentAlignment = Alignment.Center
             ) {
                 MovieImage(imageUrl = movie.images[0])
-                FavoriteIcon(movie.id, viewModel)
+                FavoriteIcon(movie, toggleFavoriteMovie)
             }
 
             MovieDetails(modifier = Modifier.padding(12.dp), movie = movie)
@@ -85,20 +87,20 @@ fun MovieImage(imageUrl: String) {
 }
 
 @Composable
-fun FavoriteIcon(movieId: String, viewModel: MovieCollectionViewModel) {
+fun FavoriteIcon(movie: Movie, toggleFavoriteMovie: (movie: Movie) -> Unit = {}) {
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(10.dp),
         contentAlignment = Alignment.TopEnd
     ) {
         var isFavorite by remember { mutableStateOf(false) }
-        isFavorite = viewModel.movieList.filter {  it.id == movieId}[0].isFavorite
+        isFavorite = movie.isFavorite
         IconToggleButton(
             checked = isFavorite,
             onCheckedChange = {
+                println(isFavorite)
                 isFavorite = !isFavorite
-                viewModel.movieList.filter {  it.id == movieId}[0].isFavorite = !viewModel.movieList.filter {  it.id == movieId}[0].isFavorite
-                println(viewModel.movieList.filter {  it.id == movieId}[0])
+                toggleFavoriteMovie(movie)
             }
         ) {
             Icon(
@@ -196,37 +198,6 @@ fun HorizontalScrollableImageView(movie: Movie) {
                     contentScale = ContentScale.Crop
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun MovieRowFilter(
-    movie: Movie = getMovies()[0],
-    modifier: Modifier = Modifier,
-    viewModel: MovieCollectionViewModel,
-    onItemClick: (String) -> Unit = {}
-) {
-    Card(modifier = modifier
-        .clickable {
-            onItemClick(movie.id)
-        }
-        .fillMaxWidth()
-        .padding(5.dp),
-        shape = Shapes.large,
-        elevation = 10.dp
-    ) {
-        Column {
-            Box(modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                MovieImage(imageUrl = movie.images[0])
-                FavoriteIcon(movie.id, viewModel)
-            }
-
-            MovieDetails(modifier = Modifier.padding(12.dp), movie = movie)
         }
     }
 }

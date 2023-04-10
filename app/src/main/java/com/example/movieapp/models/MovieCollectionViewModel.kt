@@ -15,9 +15,13 @@ class MovieCollectionViewModel : ViewModel() {
         return _movieList.filter { it.isFavorite }
     }
 
-    fun toggleMovie(movieid: String) {
-        getMovies().filter { it.id == movieid }[0].isFavorite =
-            getMovies().filter { it.id == movieid }[0].isFavorite != true
+    fun toggleFavoriteMovie(movie: Movie) {
+        if (movie.isFavorite == true) {
+            println("fsefs")
+            movie.isFavorite = false
+        } else {
+            movie.isFavorite = true
+        }
     }
 
     fun addMovies(

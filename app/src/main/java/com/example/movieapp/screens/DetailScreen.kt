@@ -54,7 +54,8 @@ fun MainContent(modifier: Modifier = Modifier, movie: Movie,     viewModel : Mov
             verticalArrangement = Arrangement.Top
         ) {
 
-            MovieRow(movie = movie, viewModel = viewModel)
+            MovieRow(movie = movie, toggleFavoriteMovie = {viewModel.toggleFavoriteMovie(it)},
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
