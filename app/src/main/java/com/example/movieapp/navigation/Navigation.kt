@@ -1,20 +1,33 @@
 package com.example.movieapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.movieapp.MovieCollectionViewModelFactory
+import com.example.movieapp.data.MovieDatabase
 import com.example.movieapp.models.MovieCollectionViewModel
+import com.example.movieapp.repositories.MovieRepository
 import com.example.movieapp.screens.*
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
 
+    val db = MovieDatabase.getDatabase(LocalContext.current)
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = MovieCollectionViewModelFactory(repository)
+
+val coroutineScope = rememberCoroutineScope()
+
+    val viewModel: MovieCollectionViewModel = viewModel(factory = factory)
+
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
-        val viewModel = MovieCollectionViewModel()
 
         composable(route = Screen.MainScreen.route){
             HomeScreen(navController = navController, viewModel = viewModel)

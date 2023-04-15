@@ -2,46 +2,45 @@ package com.example.movieapp.models
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.movieapp.repositories.MovieRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class MovieCollectionViewModel : ViewModel() {
+class MovieCollectionViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    private val _movieList = getMovies().toMutableStateList()
-    val movieList: List<Movie>
-        get() = _movieList
+    private val _movieList = MutableStateFlow(listOf<Movie>())
+    val movieList: StateFlow<List<Movie>> = _movieList.asStateFlow()
 
-    fun getFavorites(): List<Movie> {
-        return _movieList.filter { it.isFavorite }
+
+    init {
+        viewModelScope.launch {
+            repository.getAllMovies().collect{ movieList ->
+                _movieList.value = movieList
+            }
+        }
+    }
+    fun getFavorites() {
+        repository.getAllMoviesisFavorite()
     }
 
     fun toggleFavoriteMovie(movie: Movie) {
         movie.isFavorite = movie.isFavorite != true
+        repository.update(movie)
     }
 
-    fun addMovies(
-        id: String,
-        title: String,
-        year: String,
-        genres: List<ListItemSelectable>,
-        director: String,
-        plot: String,
-        rating: String
-    ) {
-        _movieList.add(
-            Movie(
-                id = id,
-                title = title,
-                year = year,
-                genre = genres.joinToString(),
-                director = director,
-                actors = "Sam Worthington, Zoe Saldana, Sigourney Weaver, Stephen Lang",
-                plot = plot,
-                images =
-                listOf(
-"https://www.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg",                ),
-                rating = rating
-            )
-        )
+    fun addMovies(movie: Movie) {
+        repository.add(movie)
     }
+
+    fun deleteMovie(movie: Movie) {
+        repository.delete(movie)
+    }
+
+
 
     var regUser: RegisterUser = RegisterUser()
 

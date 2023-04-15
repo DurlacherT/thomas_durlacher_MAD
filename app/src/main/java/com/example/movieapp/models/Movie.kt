@@ -1,13 +1,21 @@
 package com.example.movieapp.models
 
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+
+@Entity
 data class Movie(
+    @PrimaryKey(autoGenerate = true)
     val id: String,
     val title: String,
     val year: String,
+    @Ignore
     val genre: String,
     val director: String,
     val actors: String,
     val plot: String,
+    @Ignore
     val images: List<String>,
     val rating: String,
     var isFavorite: Boolean = false

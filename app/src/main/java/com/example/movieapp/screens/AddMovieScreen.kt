@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.movieapp.R
+import com.example.movieapp.models.Movie
 import com.example.movieapp.models.MovieCollectionViewModel
 import com.example.movieapp.widgets.SimpleTopAppBar
 
@@ -236,15 +237,18 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                 enabled = vm.isEnabledRegisterButton.value,
                 onClick = {
                     vm.addMovies(
+                        Movie(
                         "id",
                         vm.title.value,
                         vm.year.value,
-                        vm.genreItems.value,
+                        vm.genreItems.value.toString(),
                         vm.director.value,
+                            vm.actors.value,
                         vm.plot.value,
-                        vm.rating.toString()
+                            listOf<String>(" https://images-na.ssl-images-amazon.com/images/M/MV5BNzM2MDk3MTcyMV5BMl5BanBnXkFtZTcwNjg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg"),
+                        vm.rating.toString())
                     )
-                    vm.movieList.forEach { println(it) }
+                    //vm.movieList.forEach { println(it) }
                     println("test")
                 }
             ) {
