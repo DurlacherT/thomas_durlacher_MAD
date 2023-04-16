@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.MovieCollectionViewModel
-import com.example.movieapp.models.getMovies
+//import com.example.movieapp.models.getMovies
 import com.example.movieapp.widgets.MovieRow
 import com.example.movieapp.widgets.SimpleTopAppBar
 
@@ -22,10 +22,10 @@ fun FavoriteScreen(navController: NavController, viewModel : MovieCollectionView
             Text(text = "My Favorite Movies")
         }
     }){ padding ->
-        val movieList: List<Movie> = getMovies()
+    //    val movieList: List<Movie> = getMovies()
 
         Column(modifier = Modifier.padding(padding)) {
-            LazyColumn {
+           /* LazyColumn {
                 items(viewModel.getFavorites()){ movie ->
                     MovieRow(
                         movie = movie,
@@ -35,7 +35,7 @@ fun FavoriteScreen(navController: NavController, viewModel : MovieCollectionView
                         }
                     )
                 }
-            }
+            }*/
         }
     }
 }

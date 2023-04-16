@@ -8,20 +8,27 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.MovieCollectionViewModel
-import com.example.movieapp.models.getMovies
+import com.example.movieapp.repositories.MovieRepository
+//import com.example.movieapp.models.getMovies
 import com.example.movieapp.widgets.HomeTopAppBar
 import com.example.movieapp.widgets.MovieRow
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     navController: NavController = rememberNavController(),
-    viewModel: MovieCollectionViewModel
+    viewModel: MovieCollectionViewModel,
+    data: MovieRepository
 ){
     Scaffold(topBar = {
         HomeTopAppBar(
@@ -46,7 +53,7 @@ fun HomeScreen(
             }
         )
     }) { padding ->
-        MainContent(modifier = Modifier.padding(padding), navController = navController,viewModel = viewModel)
+        MainContent(modifier = Modifier.padding(padding), navController = navController,viewModel = viewModel, data)
     }
 }
 
@@ -54,9 +61,10 @@ fun HomeScreen(
 fun MainContent(
     modifier: Modifier,
     navController: NavController,
-    viewModel: MovieCollectionViewModel
+    viewModel: MovieCollectionViewModel,
+    data: MovieRepository
 ) {
-    val movies = getMovies()
+    var movies = data
     MovieList(
         modifier = modifier,
         navController = navController,
@@ -70,22 +78,28 @@ fun MovieList(
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel : MovieCollectionViewModel,
-    movies: List<Movie> = getMovies()
+    movies: MovieRepository
 ) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     LazyColumn (
         modifier = modifier,
         contentPadding = PaddingValues(all = 12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(viewModel.movieList) { movie ->
-            MovieRow(
-                movie = movie,
-                toggleFavoriteMovie = {viewModel.toggleFavoriteMovie(it)},
-                onItemClick = { movieId ->
-                    navController.navigate(Screen.DetailScreen.withId(movieId))
-                }
-            )
+        coroutineScope.launch {
+            items(movies.getAllMovies().toList()) { movie ->
+                MovieRow(
+                    movie = movie[0],
+                    toggleFavoriteMovie = {viewModel.toggleFavoriteMovie(it)},
+                    onItemClick = { movieId ->
+                        navController.navigate(Screen.DetailScreen.withId(movieId))
+                    }
+                )
+            }
         }
+
     }
 }
 

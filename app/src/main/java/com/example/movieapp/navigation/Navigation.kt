@@ -23,14 +23,16 @@ fun Navigation() {
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MovieCollectionViewModelFactory(repository)
 
-val coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     val viewModel: MovieCollectionViewModel = viewModel(factory = factory)
+
+    val movies = repository.getAllMovies()
 
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
 
         composable(route = Screen.MainScreen.route){
-            HomeScreen(navController = navController, viewModel = viewModel)
+            HomeScreen(navController = navController, viewModel = viewModel, data = repository)
         }
 
         composable(Screen.FavoriteScreen.route) {

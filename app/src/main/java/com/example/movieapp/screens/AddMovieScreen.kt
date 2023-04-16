@@ -238,14 +238,14 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                 onClick = {
                     vm.addMovies(
                         Movie(
-                        "id",
+
                         vm.title.value,
                         vm.year.value,
-                        vm.genreItems.value.toString(),
+                        //vm.genreItems.value.toString(),
                         vm.director.value,
                             vm.actors.value,
                         vm.plot.value,
-                            listOf<String>(" https://images-na.ssl-images-amazon.com/images/M/MV5BNzM2MDk3MTcyMV5BMl5BanBnXkFtZTcwNjg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg"),
+                       //     listOf<String>(" https://images-na.ssl-images-amazon.com/images/M/MV5BNzM2MDk3MTcyMV5BMl5BanBnXkFtZTcwNjg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg"),
                         vm.rating.toString())
                     )
                     //vm.movieList.forEach { println(it) }

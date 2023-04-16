@@ -33,12 +33,12 @@ import com.example.movieapp.R
 //import com.example.movieappmad23.R
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.MovieCollectionViewModel
-import com.example.movieapp.models.getMovies
+//import com.example.movieapp.models.getMovies
 import com.example.movieapp.ui.theme.Shapes
 
 @Composable
 fun MovieRow(
-    movie: Movie = getMovies()[0],
+    movie: Movie,
     modifier: Modifier = Modifier,
     toggleFavoriteMovie: (movie: Movie) -> Unit = {},
     onItemClick: (String) -> Unit = {}
@@ -47,7 +47,7 @@ fun MovieRow(
         .clickable {
             toggleFavoriteMovie(movie)
 println("test")
-            onItemClick(movie.id)
+            onItemClick(movie.id.toString())
         }
         .fillMaxWidth()
         .padding(5.dp),
@@ -60,7 +60,7 @@ println("test")
                 .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                MovieImage(imageUrl = movie.images[0])
+                MovieImage(imageUrl = "test.at")
                 FavoriteIcon(movie, toggleFavoriteMovie)
             }
 
@@ -160,7 +160,7 @@ fun MovieDetails(modifier: Modifier = Modifier, movie: Movie) {
         Column (modifier = modifier) {
             Text(text = "Director: ${movie.director}", style = MaterialTheme.typography.caption)
             Text(text = "Released: ${movie.year}", style = MaterialTheme.typography.caption)
-            Text(text = "Genre: ${movie.genre}", style = MaterialTheme.typography.caption)
+            //Text(text = "Genre: ${movie.genre}", style = MaterialTheme.typography.caption)
             Text(text = "Actors: ${movie.actors}", style = MaterialTheme.typography.caption)
             Text(text = "Rating: ${movie.rating}", style = MaterialTheme.typography.caption)
 
@@ -180,8 +180,8 @@ fun MovieDetails(modifier: Modifier = Modifier, movie: Movie) {
 
 @Composable
 fun HorizontalScrollableImageView(movie: Movie) {
-    LazyRow {
-        items(movie.images) { image ->
+  /*  LazyRow {
+        items(List<Movie>) { image ->
             Card(
                 modifier = Modifier
                     .padding(12.dp)
@@ -199,5 +199,5 @@ fun HorizontalScrollableImageView(movie: Movie) {
                 )
             }
         }
-    }
+    }*/
 }
