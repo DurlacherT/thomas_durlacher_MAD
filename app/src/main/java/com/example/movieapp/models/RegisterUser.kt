@@ -1,7 +1,7 @@
 package com.example.movieapp.models
 
 data class RegisterUser(
-    var id: String = "",
+    var id: Int = 1,
     var title: String = "",
     var year: String = "",
     var genreItems: List<ListItemSelectable> = mutableListOf(),

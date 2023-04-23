@@ -4,11 +4,13 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.repositories.MovieRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlin.math.log10
 
 class MovieCollectionViewModel(private val repository: MovieRepository) : ViewModel() {
 
@@ -44,7 +46,7 @@ class MovieCollectionViewModel(private val repository: MovieRepository) : ViewMo
 
     var regUser: RegisterUser = RegisterUser()
 
-    var id: MutableState<String> = mutableStateOf(regUser.id)
+    var id: MutableState<Int> = mutableStateOf(regUser.id.toInt())
     var isidValid: MutableState<Boolean> = mutableStateOf(true)
     var userIdErrMsg: MutableState<String> = mutableStateOf("")
 
@@ -99,7 +101,7 @@ class MovieCollectionViewModel(private val repository: MovieRepository) : ViewMo
     }
 
     fun validateidName() {
-        if (id.value.length >= 10) {
+        if (log10(id.value.toDouble()) >= 10) {
             isidValid.value = true
             userIdErrMsg.value = "User Name should be less than 10 chars"
         } else {

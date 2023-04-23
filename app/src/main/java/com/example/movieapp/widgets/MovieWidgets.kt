@@ -33,21 +33,20 @@ import com.example.movieapp.R
 //import com.example.movieappmad23.R
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.MovieCollectionViewModel
+import com.example.movieapp.models.getMovies
 //import com.example.movieapp.models.getMovies
 import com.example.movieapp.ui.theme.Shapes
 
 @Composable
 fun MovieRow(
-    movie: Movie,
+    movie: Movie = getMovies()[0],
     modifier: Modifier = Modifier,
-    toggleFavoriteMovie: (movie: Movie) -> Unit = {},
-    onItemClick: (String) -> Unit = {}
+    onMovieRowClick: (Int) -> Unit = {},
+    toggleFavoriteMovie: (Movie) -> Unit = {},
 ) {
     Card(modifier = modifier
         .clickable {
-            toggleFavoriteMovie(movie)
-println("test")
-            onItemClick(movie.id.toString())
+            onMovieRowClick(movie.id)
         }
         .fillMaxWidth()
         .padding(5.dp),
@@ -63,7 +62,6 @@ println("test")
                 MovieImage(imageUrl = "test.at")
                 FavoriteIcon(movie, toggleFavoriteMovie)
             }
-
             MovieDetails(modifier = Modifier.padding(12.dp), movie = movie)
         }
     }
@@ -92,22 +90,11 @@ fun FavoriteIcon(movie: Movie, toggleFavoriteMovie: (movie: Movie) -> Unit = {})
         .fillMaxSize()
         .padding(10.dp),
         contentAlignment = Alignment.TopEnd
-    ) {
-        var isFavorite by remember { mutableStateOf(false) }
-        isFavorite = movie.isFavorite
-        IconToggleButton(
-            checked = isFavorite,
-            onCheckedChange = {
-                println(isFavorite)
-                isFavorite = !isFavorite
-                toggleFavoriteMovie(movie)
-            }
-        ) {
+    )  {
             Icon(
                 tint = MaterialTheme.colors.secondary,
-                //imageVector = Icons.Default.FavoriteBorder,
-                imageVector = if (isFavorite) {
-                    Icons.Filled.Favorite
+                imageVector = if (movie.isFavorite) {
+                    Icons.Default.Favorite
                 } else {
                     Icons.Default.FavoriteBorder
                 },
@@ -115,7 +102,7 @@ fun FavoriteIcon(movie: Movie, toggleFavoriteMovie: (movie: Movie) -> Unit = {})
             )
         }
     }
-}
+
 
 
 

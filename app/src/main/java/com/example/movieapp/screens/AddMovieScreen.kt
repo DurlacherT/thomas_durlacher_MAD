@@ -21,10 +21,14 @@ import com.example.movieapp.R
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.MovieCollectionViewModel
 import com.example.movieapp.widgets.SimpleTopAppBar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddMovieScreen(navController: NavController, viewModel: MovieCollectionViewModel) {
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -34,13 +38,17 @@ fun AddMovieScreen(navController: NavController, viewModel: MovieCollectionViewM
             }
         },
     ) { padding ->
-        MainContent(Modifier.padding(padding), viewModel)
+        MainContent(Modifier.padding(padding), viewModel, coroutineScope)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
+fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel, coroutineScope: CoroutineScope) {
+
+
+
+
     Surface(modifier = modifier.fillMaxWidth().fillMaxHeight().padding(10.dp)) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(),
@@ -60,14 +68,16 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
 
             var isEnabledSaveButton by remember { mutableStateOf(false) }
 
+
+
             Column() {
                 OutlinedTextField(
                     value = vm.title.value,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        vm.title.value = it
-                        vm.validatetitle()
+                            vm.title.value = it
+                            vm.validatetitle()
                     },
                     label = { Text(text = stringResource(R.string.enter_movie_title)) },
                     isError = vm.istitleValid.value
@@ -86,8 +96,8 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        vm.year.value = it
-                        vm.validateyear()
+                            vm.year.value = it
+                            vm.validateyear()
                     },
                     label = { Text(stringResource(R.string.enter_movie_year)) },
                     isError = vm.isyearValid.value
@@ -120,15 +130,15 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                                 else colorResource(id = R.color.white)
                             ),
                             onClick = {
-                                vm.genreItems.value =
-                                    vm.genreItems.value.map {
-                                        if (it.title == genreItem.title) {
-                                            genreItem.copy(isSelected = !genreItem.isSelected)
-                                        } else {
-                                            it
+                                    vm.genreItems.value =
+                                        vm.genreItems.value.map {
+                                            if (it.title == genreItem.title) {
+                                                genreItem.copy(isSelected = !genreItem.isSelected)
+                                            } else {
+                                                it
+                                            }
                                         }
-                                    }
-                                vm.validategenreItems()
+                                    vm.validategenreItems()
                             }
                         ) {
                             Text(text = genreItem.title)
@@ -149,8 +159,8 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        vm.director.value = it
-                        vm.validatedirector()
+                             vm.director.value = it
+                            vm.validatedirector()
                     },
                     label = { Text(stringResource(R.string.enter_director)) },
                     isError = vm.isdirectorValid.value
@@ -188,8 +198,8 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth().height(120.dp),
                     onValueChange = {
-                        vm.plot.value = it
-                        vm.validateplot()
+                            vm.plot.value = it
+                            vm.validateplot()
                     },
                     label = {
                         Text(
@@ -214,13 +224,13 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
                         vm.rating.value = it.toFloat()
-                        vm.validaterating()
-                        rating =
-                            if (it.startsWith("0")) {
-                                ""
-                            } else {
-                                it
-                            }
+                            vm.validaterating()
+                            rating =
+                                if (it.startsWith("0")) {
+                                    ""
+                                } else {
+                                    it
+                                }
                     },
                     label = { Text(stringResource(R.string.enter_rating)) },
                     isError = vm.isratingValid.value
@@ -236,18 +246,21 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
             Button(
                 enabled = vm.isEnabledRegisterButton.value,
                 onClick = {
-                    vm.addMovies(
-                        Movie(
-
-                        vm.title.value,
-                        vm.year.value,
-                        //vm.genreItems.value.toString(),
-                        vm.director.value,
-                            vm.actors.value,
-                        vm.plot.value,
-                       //     listOf<String>(" https://images-na.ssl-images-amazon.com/images/M/MV5BNzM2MDk3MTcyMV5BMl5BanBnXkFtZTcwNjg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg"),
-                        vm.rating.toString())
-                    )
+                    coroutineScope.launch {
+                        vm.addMovies(
+                            Movie(
+                                vm.id.value,
+                                vm.title.value,
+                                vm.year.value,
+                                vm.genreItems.value.toString(),
+                                vm.director.value,
+                                vm.actors.value,
+                                vm.plot.value,
+                                     listOf<String>(" https://images-na.ssl-images-amazon.com/images/M/MV5BNzM2MDk3MTcyMV5BMl5BanBnXkFtZTcwNjg0MTUzNA@@._V1_SX1777_CR0,0,1777,999_AL_.jpg").toString(),
+                                vm.rating.toString()
+                            )
+                        )
+                    }
                     //vm.movieList.forEach { println(it) }
                     println("test")
                 }
@@ -257,3 +270,4 @@ fun MainContent(modifier: Modifier = Modifier, vm: MovieCollectionViewModel) {
         }
     }
 }
+

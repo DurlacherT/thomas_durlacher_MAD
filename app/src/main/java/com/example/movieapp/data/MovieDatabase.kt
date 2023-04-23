@@ -8,7 +8,7 @@ import com.example.movieapp.models.Movie
 
 @Database(
     entities = [Movie::class],
-    version = 1
+    version = 2
 )
 abstract class MovieDatabase: RoomDatabase() {
     abstract fun movieDao(): MovieDao

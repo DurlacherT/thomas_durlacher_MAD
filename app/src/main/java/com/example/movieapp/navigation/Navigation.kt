@@ -36,7 +36,7 @@ fun Navigation() {
         }
 
         composable(Screen.FavoriteScreen.route) {
-            FavoriteScreen(navController = navController, viewModel = viewModel)
+            FavoriteScreen(navController = navController)
         }
 
         composable(Screen.AddMovieScreen.route) {
